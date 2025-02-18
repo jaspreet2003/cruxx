@@ -34,7 +34,7 @@ To get started with CryptoPulse, follow these steps:
 
 1. **Clone the repository:**
     ```bash
-    git clone https://github.com/Divyanshu11011/CryptoPulse.git
+    git clone https://github.com/jaspreet2003/cruxx.git
     cd CryptoPulse
     ```
 
