@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BTC Price Stream</title>
+</head>
+<body>
+    <h1>Live BTC Price</h1>
+    <div id="btcPrice">Connecting...</div>
+
+    <script>
+        const apiKey = 'bc25881190ee00511635f4df10e0182f366453e201978f93d9bdab5c48663abd'; // Replace with your CryptoCompare API key
+        const wsUrl = `wss://streamer.cryptocompare.com/v2?api_key=${apiKey}`;
+        
+        const socket = new WebSocket(wsUrl);
+
+        socket.onopen = () => {
+            console.log('WebSocket connection opened');
+            
+            // Subscribe to the BTC price data (Aggregate Index)
+            const subscriptionMessage = {
+                action: "SubAdd",
+                subs: ["5~CCCAGG~BTC~USD"]
+            };
+
+            socket.send(JSON.stringify(subscriptionMessage));
+        };
+
+        socket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+
+            if (data.TYPE === '5' && data.PRICE) { // Aggregate Index message with price info
+                const price = data.PRICE;
+                document.getElementById('btcPrice').innerText = `BTC Price: $${price}`;
+            }
+        };
+
+        socket.onerror = (error) => {
+            console.error('WebSocket error:', error);
+        };
+
+        socket.onclose = () => {
+            console.log('WebSocket connection closed');
+            document.getElementById('btcPrice').innerText = 'Connection closed';
+        };
+    </script>
+</body>
+</html>
